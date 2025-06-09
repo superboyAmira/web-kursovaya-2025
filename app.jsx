@@ -7,8 +7,7 @@ export default function App() {
   const [tournaments, setTournaments] = useState([]);
 
   useEffect(() => {
-    fetch('/api/tournaments')
-    // fetch('http://localhost:3000/tournaments')
+    fetch('http://localhost:8080/api/tournaments')
       .then(res => res.json())
       .then(setTournaments)
       .catch(console.error);
