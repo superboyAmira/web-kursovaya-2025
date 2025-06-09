@@ -5,16 +5,17 @@ import './styles/styles.css';
 
 export default function App() {
   const [tournaments, setTournaments] = useState([]);
+  const conn = 'http://localhost:8080'
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/tournaments')
+    fetch(conn + '/api/tournaments')
       .then(res => res.json())
       .then(setTournaments)
       .catch(console.error);
   }, []);
 
   const createTournament = async (newT) => {
-    const res = await fetch('/api/tournaments', {
+    const res = await fetch(conn + '/api/tournaments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newT),
@@ -24,7 +25,7 @@ export default function App() {
   };
 
   const archiveTournament = async (id) => {
-    await fetch(`/api/tournaments/${id}`, {
+    await fetch(conn + `/api/tournaments/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'archive' }),
@@ -33,11 +34,11 @@ export default function App() {
   };
 
   const deleteTournament = async (id) => {
-    await fetch(`/api/tournaments/${id}`, { method: 'DELETE' });
+    await fetch(conn + `/api/tournaments/${id}`, { method: 'DELETE' });
     setTournaments(prev => prev.filter(t => t.id !== id));
   };
 
-  const active = tournaments.filter(t => t.status !== 'archive');
+  const active = tournaments.filter(t => t.status === 'active');
   const archived = tournaments.filter(t => t.status === 'archive');
   const inprogress = tournaments.filter(t => t.status === 'in_progress');
 
