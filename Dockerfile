@@ -1,12 +1,9 @@
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "4173"]
+EXPOSE 4173
