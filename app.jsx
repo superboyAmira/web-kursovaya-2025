@@ -24,13 +24,15 @@ export default function App() {
     setTournaments(prev => [...prev, saved]);
   };
 
-  const archiveTournament = async (id) => {
-    await fetch(conn + `/api/tournaments/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'archive' }),
+  const changeTournamentState = async (id, newState) => {
+    await fetch(`${conn}/api/tournaments/${id}?state=${newState}`, {
+      method: 'PATCH'
     });
-    setTournaments(prev => prev.map(t => t.id === id ? { ...t, status: 'archive' } : t));
+    setTournaments(prev =>
+      prev.map(t =>
+        t.id === id ? { ...t, status: newState } : t
+      )
+    );
   };
 
   const deleteTournament = async (id) => {
@@ -55,19 +57,33 @@ export default function App() {
             key={t.id}
             data={t}
             onDelete={() => deleteTournament(t.id)}
-            onArchive={() => archiveTournament(t.id)}
+            onChangeState={(newState) => changeTournamentState(t.id, newState)}
           />
         ))}
       </div>
 
       <h2>Архив</h2>
-      <ul>
-        {archived.map(t => <li key={t.id}>{t.title}</li>)}
-      </ul>
+      <div className="grid">
+        {archived.map(t => (
+          <TournamentCard
+            key={t.id}
+            data={t}
+            onDelete={() => deleteTournament(t.id)}
+            onChangeState={(newState) => changeTournamentState(t.id, newState)}
+          />
+        ))}
+      </div>
       <h2>В прогрессе</h2>
-      <ul>
-        {inprogress.map(t => <li key={t.id}>{t.title}</li>)}
-      </ul>
+      <div className="grid">
+        {inprogress.map(t => (
+          <TournamentCard
+            key={t.id}
+            data={t}
+            onDelete={() => deleteTournament(t.id)}
+            onChangeState={(newState) => changeTournamentState(t.id, newState)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

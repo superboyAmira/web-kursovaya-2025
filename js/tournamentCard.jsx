@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function TournamentCard({ data, onDelete, onArchive }) {
+const STATUS_OPTIONS = [
+  { value: 'active',     label: 'Активировать'     },
+  { value: 'in_progress', label: 'В прогресс'       },
+  { value: 'archive',     label: 'В архив'          },
+];
+
+export default function TournamentCard({ data, onDelete, onChangeState }) {
   return (
     <div className="card">
       <h3>{data.title}</h3>
@@ -9,7 +15,19 @@ export default function TournamentCard({ data, onDelete, onArchive }) {
       <p><b>Организатор:</b> {data.organizer}</p>
 
       <div className="actions">
-        <button className="archive" onClick={onArchive}>Архив</button>
+        {STATUS_OPTIONS
+          .filter(opt => opt.value !== data.status)
+          .map(opt => (
+            <button
+              key={opt.value}
+              className={opt.value === 'archive' ? 'archive' : ''}
+              onClick={() => onChangeState(opt.value)}
+            >
+              {opt.label}
+            </button>
+          ))
+        }
+
         <button className="delete" onClick={onDelete}>Удалить</button>
       </div>
     </div>
