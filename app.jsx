@@ -40,6 +40,7 @@ export default function App() {
 
   const active = tournaments.filter(t => t.status !== 'archive');
   const archived = tournaments.filter(t => t.status === 'archive');
+  const inprogress = tournaments.filter(t => t.status === 'in_progress');
 
   return (
     <div className="container">
@@ -62,6 +63,10 @@ export default function App() {
       <h2>Архив</h2>
       <ul>
         {archived.map(t => <li key={t.id}>{t.title}</li>)}
+      </ul>
+      <h2>В прогрессе</h2>
+      <ul>
+        {inprogress.map(t => <li key={t.id}>{t.title}</li>)}
       </ul>
     </div>
   );
